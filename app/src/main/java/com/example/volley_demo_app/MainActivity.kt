@@ -9,6 +9,9 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 
 class MainActivity : AppCompatActivity() {
+
+    val queue = RequestQueueSingleton.getInstance(this)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -16,17 +19,14 @@ class MainActivity : AppCompatActivity() {
 
         val text = findViewById<TextView>(R.id.activity_textView_justText)
 
-
         val button = findViewById<Button>(R.id.activity_button)
         button.setOnClickListener {
-            connect(text)
+            queue.addToRequestQueue(getStringRequest(text))
         }
     }
 
 
-    private fun connect(textView: TextView) {
-        // Instantiate the RequestQueue.
-        val queue = Volley.newRequestQueue(this)
+    private fun getStringRequest(textView: TextView): StringRequest {
         val url = "https://www.google.com"
 
         // Request a string response from the provided URL.
@@ -38,7 +38,6 @@ class MainActivity : AppCompatActivity() {
             },
             { textView.text = "That didn't work!" })
 
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest)
+        return stringRequest
     }
 }
