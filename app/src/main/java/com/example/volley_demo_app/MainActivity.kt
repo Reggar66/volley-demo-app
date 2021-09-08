@@ -2,16 +2,20 @@ package com.example.volley_demo_app
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
+import com.google.gson.Gson
 
 class MainActivity : AppCompatActivity() {
 
     private val queue = RequestQueueSingleton.getInstance(this)
+
+    private val gson = Gson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,20 +26,21 @@ class MainActivity : AppCompatActivity() {
 
         val button = findViewById<Button>(R.id.activity_button)
         button.setOnClickListener {
-            queue.addToRequestQueue(getJsonObjectRequest(text))
+            queue.addToRequestQueue(getStringRequest(text))
         }
     }
 
 
     private fun getStringRequest(textView: TextView): StringRequest {
-        val url = "https://www.google.com"
-
-        // Request a string response from the provided URL.
+        val url = "https://jsonplaceholder.typicode.com/users/1"
         val stringRequest = StringRequest(
             Request.Method.GET, url,
             { response ->
                 // Display the first 500 characters of the response string.
                 textView.text = "Response is: ${response.substring(0, 500)}"
+                // convert to java object
+                val user = gson.fromJson(response, User::class.java)
+                Log.v("INFO", "Fetched user:" + user.toStringFormatted())
             },
             { textView.text = "That didn't work!" })
 
@@ -43,7 +48,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getJsonObjectRequest(textView: TextView): JsonObjectRequest {
-        val url = "https://jsonplaceholder.typicode.com/posts/1"
+        val url = "https://jsonplaceholder.typicode.com/users/1"
         val jsonRequest = JsonObjectRequest(
             Request.Method.GET,
             url,
