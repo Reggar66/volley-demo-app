@@ -5,12 +5,13 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import com.android.volley.Request
+import com.android.volley.toolbox.JsonArrayRequest
+import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
 
 class MainActivity : AppCompatActivity() {
 
-    val queue = RequestQueueSingleton.getInstance(this)
+    private val queue = RequestQueueSingleton.getInstance(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +22,7 @@ class MainActivity : AppCompatActivity() {
 
         val button = findViewById<Button>(R.id.activity_button)
         button.setOnClickListener {
-            queue.addToRequestQueue(getStringRequest(text))
+            queue.addToRequestQueue(getJsonObjectRequest(text))
         }
     }
 
@@ -39,5 +40,37 @@ class MainActivity : AppCompatActivity() {
             { textView.text = "That didn't work!" })
 
         return stringRequest
+    }
+
+    private fun getJsonObjectRequest(textView: TextView): JsonObjectRequest {
+        val url = "https://jsonplaceholder.typicode.com/posts/1"
+        val jsonRequest = JsonObjectRequest(
+            Request.Method.GET,
+            url,
+            null,
+            {
+                textView.text = "Response: $it"
+            },
+            {
+                textView.text = "Error :("
+            }
+        )
+        return jsonRequest
+    }
+
+    private fun getJsonArrayRequest(textView: TextView): JsonArrayRequest {
+        val url = "https://jsonplaceholder.typicode.com/posts"
+        val jsonRequest = JsonArrayRequest(
+            Request.Method.GET,
+            url,
+            null,
+            {
+                textView.text = "Response: $it"
+            },
+            {
+                textView.text = "Error :("
+            }
+        )
+        return jsonRequest
     }
 }
