@@ -5,11 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
-import com.android.volley.Request
-import com.android.volley.toolbox.JsonArrayRequest
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.StringRequest
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,56 +23,37 @@ class MainActivity : AppCompatActivity() {
 
         val button = findViewById<Button>(R.id.activity_button)
         button.setOnClickListener {
-            queue.addToRequestQueue(getStringRequest(text))
+            queue.addToRequestQueue(Requests.Users.fetchUser(1, ProcessUserFetch()))
+            queue.addToRequestQueue(Requests.Users.fetchUsers(ProcessAllUsersFetch()))
         }
     }
 
+    inner class ProcessUserFetch : Requests.Users.FetchSingleUserListener {
+        override fun onFetchUserResponse(jsonString: String) {
+            val user = gson.fromJson(jsonString, User::class.java)
+            Log.v("INFO", "Fetched user:\n" + user.toStringFormatted())
+        }
 
-    private fun getStringRequest(textView: TextView): StringRequest {
-        val url = "https://jsonplaceholder.typicode.com/users/1"
-        val stringRequest = StringRequest(
-            Request.Method.GET, url,
-            { response ->
-                // Display the first 500 characters of the response string.
-                textView.text = "Response is: ${response.substring(0, 500)}"
-                // convert to java object
-                val user = gson.fromJson(response, User::class.java)
-                Log.v("INFO", "Fetched user:" + user.toStringFormatted())
-            },
-            { textView.text = "That didn't work!" })
-
-        return stringRequest
+        override fun onError() {
+            Log.v("INFO", "Error with fetching user!")
+        }
     }
 
-    private fun getJsonObjectRequest(textView: TextView): JsonObjectRequest {
-        val url = "https://jsonplaceholder.typicode.com/users/1"
-        val jsonRequest = JsonObjectRequest(
-            Request.Method.GET,
-            url,
-            null,
-            {
-                textView.text = "Response: $it"
-            },
-            {
-                textView.text = "Error :("
-            }
-        )
-        return jsonRequest
-    }
+    inner class ProcessAllUsersFetch : Requests.Users.FetchAllUsersListener {
+        override fun onFetchAllUsersResponse(jsonString: String) {
+            val collectionType = object : TypeToken<List<User>>() {}.type
+            val users: List<User> = gson.fromJson(jsonString, collectionType)
 
-    private fun getJsonArrayRequest(textView: TextView): JsonArrayRequest {
-        val url = "https://jsonplaceholder.typicode.com/posts"
-        val jsonRequest = JsonArrayRequest(
-            Request.Method.GET,
-            url,
-            null,
-            {
-                textView.text = "Response: $it"
-            },
-            {
-                textView.text = "Error :("
+            for (user in users) {
+                if (user.id == 5)
+                    return
+
+                Log.v("INFO", "\n" + user.toStringFormatted())
             }
-        )
-        return jsonRequest
+        }
+
+        override fun onError() {
+            Log.v("INFO", "Error with fetching all users!")
+        }
     }
 }
