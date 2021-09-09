@@ -1,4 +1,4 @@
-package com.example.volley_demo_app
+package com.example.volley_demo_app.users
 
 data class User(
     val id: Int,

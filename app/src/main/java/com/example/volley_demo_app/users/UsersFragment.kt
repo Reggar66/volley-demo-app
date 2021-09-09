@@ -1,10 +1,11 @@
-package com.example.volley_demo_app
+package com.example.volley_demo_app.users
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.volley_demo_app.R
 
 class UsersFragment : Fragment() {
 

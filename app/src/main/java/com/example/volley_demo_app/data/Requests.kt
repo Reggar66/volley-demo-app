@@ -1,4 +1,4 @@
-package com.example.volley_demo_app
+package com.example.volley_demo_app.data
 
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
