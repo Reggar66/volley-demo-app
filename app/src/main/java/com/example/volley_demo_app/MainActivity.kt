@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
         val button = findViewById<Button>(R.id.activity_button)
         button.setOnClickListener {
             queue.addToRequestQueue(Requests.Users.fetchUser(1, ProcessUserFetch()))
-            queue.addToRequestQueue(Requests.Users.fetchUsers(ProcessAllUsersFetch()))
         }
     }
 
@@ -39,24 +38,6 @@ class MainActivity : AppCompatActivity() {
 
         override fun onError() {
             Log.v("INFO", "Error with fetching user!")
-        }
-    }
-
-    inner class ProcessAllUsersFetch : Requests.Users.FetchAllUsersListener {
-        override fun onFetchAllUsersResponse(jsonString: String) {
-            val collectionType = object : TypeToken<List<User>>() {}.type
-            val users: List<User> = gson.fromJson(jsonString, collectionType)
-
-            for (user in users) {
-                if (user.id == 5)
-                    return
-
-                Log.v("INFO", "\n" + user.toStringFormatted())
-            }
-        }
-
-        override fun onError() {
-            Log.v("INFO", "Error with fetching all users!")
         }
     }
 }
