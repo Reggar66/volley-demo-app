@@ -53,4 +53,53 @@ class Requests {
             return stringRequest
         }
     }
+
+    object Posts {
+        interface FetchSinglePostListener {
+            fun onFetchPostResponse(jsonString: String)
+            fun onError()
+        }
+
+        interface FetchAllPostsListener {
+            fun onFetchAllPostsResponse(jsonString: String)
+            fun onError()
+        }
+
+        /**
+         * Creates [StringRequest] that fetches one post with given id.
+         * @param postId id of a user to fetch
+         * @param listener listener used to pass fetched result to. Use [FetchSingleUserListener]
+         * @return [StringRequest] to be used with [RequestQueueSingleton]
+         */
+        @JvmStatic
+        fun fetchPost(postId: Int, listener: FetchSinglePostListener?): StringRequest {
+            val url = "https://jsonplaceholder.typicode.com/posts/$postId"
+            val stringRequest = StringRequest(
+                Request.Method.GET, url,
+                { response ->
+                    listener?.onFetchPostResponse(response)
+                },
+                { listener?.onError() })
+
+            return stringRequest
+        }
+
+        /**
+         * Creates [StringRequest] that fetches all users.
+         * @param listener listener used to pass fetched result to. Use [FetchAllUsersListener]
+         * @return [StringRequest] to be used with [RequestQueueSingleton]
+         */
+        @JvmStatic
+        fun fetchPosts(listener: FetchAllPostsListener?): StringRequest {
+            val url = "https://jsonplaceholder.typicode.com/posts"
+            val stringRequest = StringRequest(
+                Request.Method.GET, url,
+                { response ->
+                    listener?.onFetchAllPostsResponse(response)
+                },
+                { listener?.onError() })
+
+            return stringRequest
+        }
+    }
 }

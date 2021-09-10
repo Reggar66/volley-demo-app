@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/usersFragment">
+    app:startDestination="@id/postsFragment">
 
     <fragment
         android:id="@+id/usersFragment"
         android:name="com.example.volley_demo_app.users.UsersFragment"
         android:label="UsersFragment"
-        tools:layout="@layout/users_fragment" >
+        tools:layout="@layout/users_fragment">
         <action
             android:id="@+id/action_usersFragment_to_userDetailsFragment"
             app:destination="@id/userDetailsFragment" />
@@ -18,4 +18,16 @@
         android:id="@+id/userDetailsFragment"
         android:name="com.example.volley_demo_app.users.UserDetailsFragment"
         android:label="UserDetailsFragment" />
+    <fragment
+        android:id="@+id/postsFragment"
+        android:name="com.example.volley_demo_app.posts.PostsFragment"
+        android:label="PostsFragment"
+        tools:layout="@layout/posts_fragment">
+        <action
+            android:id="@+id/action_postsFragment_to_usersFragment"
+            app:destination="@id/usersFragment" />
+        <action
+            android:id="@+id/action_postsFragment_to_userDetailsFragment"
+            app:destination="@id/userDetailsFragment" />
+    </fragment>
 </navigation>
