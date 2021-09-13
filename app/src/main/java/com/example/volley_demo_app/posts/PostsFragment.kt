@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.volley_demo_app.databinding.PostsFragmentBinding
+import com.example.volley_demo_app.users.User
 
 class PostsFragment : Fragment() {
 
@@ -34,6 +35,7 @@ class PostsFragment : Fragment() {
         }
 
         viewModel.fetchPosts()
+        viewModel.fetchUser()
 
         return binding.root
     }
@@ -42,6 +44,13 @@ class PostsFragment : Fragment() {
         viewModel.posts.observe(viewLifecycleOwner, { posts: List<Post>? ->
             if (posts != null) {
                 postsAdapter.updatePosts(posts)
+            }
+        })
+
+        viewModel.users.observe(viewLifecycleOwner, { users: List<User>? ->
+            if (users != null) {
+                viewModel.createUserMap(users)
+                postsAdapter.updateUsers(viewModel.userMap)
             }
         })
     }
