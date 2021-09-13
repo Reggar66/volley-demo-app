@@ -35,7 +35,8 @@ class PostsFragment : Fragment() {
         }
 
         viewModel.fetchPosts()
-        viewModel.fetchUser()
+        viewModel.fetchUsers()
+        viewModel.fetchPhotos()
 
         return binding.root
     }
@@ -52,6 +53,10 @@ class PostsFragment : Fragment() {
                 viewModel.createUserMap(users)
                 postsAdapter.updateUsers(viewModel.userMap)
             }
+        })
+
+        viewModel.photosMap.observe(viewLifecycleOwner, {
+            postsAdapter.updatePhotos(it)
         })
     }
 }
