@@ -22,12 +22,25 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.UserViewHolder>() {
     private val users = mutableMapOf<Int, User>()
     private val photos = mutableMapOf<Int, Photo>()
 
-    class UserViewHolder(itemBinding: PostListItemBinding) :
+    var onClickListener: OnClickListener? = null
+
+    fun interface OnClickListener {
+        fun onClick(postId: Int, userId: Int)
+    }
+
+    inner class UserViewHolder(itemBinding: PostListItemBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
-        val text = itemBinding.postListItemTextView
+        val text = itemBinding.postListItemTextViewBody
         val userImage = itemBinding.postListItemUserImage
         val userFullName = itemBinding.postListItemTextViewName
         val userName = itemBinding.postListItemTextViewUsername
+
+        init {
+            val root = itemBinding.root
+            root.setOnClickListener {
+                onClickListener?.onClick(posts[adapterPosition].id, posts[adapterPosition].userId)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {

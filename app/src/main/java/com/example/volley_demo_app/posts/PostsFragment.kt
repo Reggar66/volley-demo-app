@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.volley_demo_app.databinding.PostsFragmentBinding
 import com.example.volley_demo_app.users.User
@@ -28,7 +29,13 @@ class PostsFragment : Fragment() {
         _binding = PostsFragmentBinding.inflate(inflater, container, false)
 
 
-        postsAdapter = PostsAdapter()
+        postsAdapter = PostsAdapter().apply {
+            onClickListener = PostsAdapter.OnClickListener { postId, userId ->
+                val action =
+                    PostsFragmentDirections.actionPostsFragmentToDetailsFragment(postId, userId)
+                findNavController().navigate(action)
+            }
+        }
         val recyclerView = binding.postsFragmentRecyclerView.apply {
             adapter = postsAdapter
             layoutManager = LinearLayoutManager(requireContext())

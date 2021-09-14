@@ -4,30 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/postsFragment">
-
-    <fragment
-        android:id="@+id/usersFragment"
-        android:name="com.example.volley_demo_app.users.UsersFragment"
-        android:label="UsersFragment"
-        tools:layout="@layout/users_fragment">
-        <action
-            android:id="@+id/action_usersFragment_to_userDetailsFragment"
-            app:destination="@id/userDetailsFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/userDetailsFragment"
-        android:name="com.example.volley_demo_app.users.UserDetailsFragment"
-        android:label="UserDetailsFragment" />
     <fragment
         android:id="@+id/postsFragment"
         android:name="com.example.volley_demo_app.posts.PostsFragment"
         android:label="PostsFragment"
         tools:layout="@layout/posts_fragment">
         <action
-            android:id="@+id/action_postsFragment_to_usersFragment"
-            app:destination="@id/usersFragment" />
-        <action
-            android:id="@+id/action_postsFragment_to_userDetailsFragment"
-            app:destination="@id/userDetailsFragment" />
+            android:id="@+id/action_postsFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.example.volley_demo_app.posts.details.DetailsFragment"
+        android:label="DetailsFragment">
+        <argument
+            android:name="postId"
+            android:defaultValue="-1"
+            app:argType="integer" />
+        <argument
+            android:name="userId"
+            android:defaultValue="-1"
+            app:argType="integer" />
     </fragment>
 </navigation>

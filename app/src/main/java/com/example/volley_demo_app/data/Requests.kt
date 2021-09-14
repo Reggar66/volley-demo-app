@@ -103,6 +103,40 @@ class Requests {
         }
     }
 
+    object Comments {
+        interface FetchCommentsListener {
+            fun onResponse(jsonString: String)
+            fun onError()
+        }
+
+        @JvmStatic
+        fun fetchComment(commentId: Int, listener: FetchCommentsListener?): StringRequest {
+            val url = "https://jsonplaceholder.typicode.com/comments/$commentId"
+            val stringRequest = StringRequest(
+                Request.Method.GET, url,
+                { response ->
+                    listener?.onResponse(response)
+                },
+                { listener?.onError() })
+
+            return stringRequest
+        }
+
+        @JvmStatic
+        fun fetchPostComments(postId: Int, listener: FetchCommentsListener?): StringRequest {
+            val url = "https://jsonplaceholder.typicode.com/comments?postId=$postId"
+            val stringRequest = StringRequest(
+                Request.Method.GET, url,
+                { response ->
+                    listener?.onResponse(response)
+                },
+                { listener?.onError() })
+
+            return stringRequest
+        }
+
+    }
+
     object Photos {
         interface FetchSinglePhotoListener {
             fun onFetchPhotoResponse(jsonString: String)
