@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.volley_demo_app.databinding.PostsFragmentBinding
 import com.example.volley_demo_app.users.User
 
@@ -39,6 +40,8 @@ class PostsFragment : Fragment() {
         val recyclerView = binding.postsFragmentRecyclerView.apply {
             adapter = postsAdapter
             layoutManager = LinearLayoutManager(requireContext())
+            // Disable item animation on change
+            (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         }
 
         viewModel.fetchPosts()

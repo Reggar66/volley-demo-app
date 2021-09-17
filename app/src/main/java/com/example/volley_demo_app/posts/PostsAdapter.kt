@@ -1,8 +1,12 @@
 package com.example.volley_demo_app.posts
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.volley_demo_app.Photo
 import com.example.volley_demo_app.R
@@ -28,6 +32,7 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.UserViewHolder>() {
         fun onClick(postId: Int, userId: Int)
     }
 
+
     inner class UserViewHolder(itemBinding: PostListItemBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
         val text = itemBinding.postListItemTextViewBody
@@ -35,11 +40,52 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.UserViewHolder>() {
         val userFullName = itemBinding.postListItemTextViewName
         val userName = itemBinding.postListItemTextViewUsername
         val numberOfLikes = itemBinding.postListItemTextViewNumberOfLikes
+        val numberOfReShares = itemBinding.postListItemTextViewNumberOfReShares
+        val numberOfComments = itemBinding.postListItemTextViewNumberOfComments
+
+        private val likeButton: ImageView = itemBinding.postListItemImageViewLikeButton
+        private val commentsButton: ImageView = itemBinding.postListItemImageViewCommentsButton
+        private val reShareButton: ImageView = itemBinding.postListItemImageViewReShareButton
+        private val shareButton: ImageView = itemBinding.postListItemImageViewShareButton
 
         init {
             val root = itemBinding.root
             root.setOnClickListener {
                 onClickListener?.onClick(posts[adapterPosition].id, posts[adapterPosition].userId)
+            }
+
+            commentsButton.setOnClickListener {
+                onClickListener?.onClick(posts[adapterPosition].id, posts[adapterPosition].userId)
+            }
+
+            likeButton.setOnClickListener {
+                val post = posts[adapterPosition]
+                if (post.isLiked)
+                    return@setOnClickListener
+
+                post.likes += 1
+                post.isLiked = true
+                likeButton.setImageResource(R.drawable.ic_baseline_favorite_24)
+                notifyItemChanged(adapterPosition)
+            }
+
+            reShareButton.setOnClickListener {
+                Toast.makeText(context, "This should pass post forward.", Toast.LENGTH_SHORT).show()
+            }
+
+            shareButton.setOnClickListener {
+                Toast.makeText(context, "This should start sharing process.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        fun likeButtonHandler(post: Post) {
+            if (post.isLiked){
+                likeButton.setImageResource(R.drawable.ic_baseline_favorite_24)
+                likeButton.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.purple_200))
+            }
+            else{
+                likeButton.setImageResource(R.drawable.ic_baseline_favorite_border_24)
+                likeButton.imageTintList = null
             }
         }
     }
@@ -60,11 +106,15 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.UserViewHolder>() {
         holder.userFullName.text = user?.name
         holder.userName.text = "@${user?.username}"
         holder.numberOfLikes.text = post.likes.toString()
+        holder.numberOfReShares.text = post.reShares.toString()
+        holder.numberOfComments.text = post.comments.toString()
 
         val photo = photos[post.userId]
         Picasso.get().load(photo?.thumbnailUrl)
             .placeholder(R.drawable.ic_launcher_foreground)
             .into(holder.userImage)
+
+        holder.likeButtonHandler(post)
     }
 
     override fun getItemCount(): Int {
