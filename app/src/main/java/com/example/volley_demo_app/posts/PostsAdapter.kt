@@ -34,6 +34,7 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.UserViewHolder>() {
         val userImage = itemBinding.postListItemUserImage
         val userFullName = itemBinding.postListItemTextViewName
         val userName = itemBinding.postListItemTextViewUsername
+        val numberOfLikes = itemBinding.postListItemTextViewNumberOfLikes
 
         init {
             val root = itemBinding.root
@@ -52,12 +53,15 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.UserViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        holder.text.text = posts[position].body
-        val user = users[posts[position].userId]
+        val post = posts[position]
+        val user = users[post.userId]
+
+        holder.text.text = post.body
         holder.userFullName.text = user?.name
         holder.userName.text = "@${user?.username}"
+        holder.numberOfLikes.text = post.likes.toString()
 
-        val photo = photos[posts[position].userId]
+        val photo = photos[post.userId]
         Picasso.get().load(photo?.thumbnailUrl)
             .placeholder(R.drawable.ic_launcher_foreground)
             .into(holder.userImage)

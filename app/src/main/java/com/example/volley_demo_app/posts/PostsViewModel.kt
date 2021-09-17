@@ -11,6 +11,8 @@ import com.example.volley_demo_app.data.Requests
 import com.example.volley_demo_app.users.User
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 class PostsViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -41,9 +43,7 @@ class PostsViewModel(application: Application) : AndroidViewModel(application) {
             .addToRequestQueue(Requests.Posts.fetchPosts(object :
                 Requests.Posts.FetchAllPostsListener {
                 override fun onFetchAllPostsResponse(jsonString: String) {
-                    val collectionType = object : TypeToken<List<Post>>() {}.type
-                    val posts: List<Post> = gson.fromJson(jsonString, collectionType)
-                    // Shuffling - pseudo simulating feed of social app
+                    val posts: List<Post> = Json.decodeFromString(jsonString)
                     mutablePosts.value = posts.shuffled()
                 }
 
@@ -58,8 +58,7 @@ class PostsViewModel(application: Application) : AndroidViewModel(application) {
             .addToRequestQueue(Requests.Users.fetchUsers(object :
                 Requests.Users.FetchAllUsersListener {
                 override fun onFetchAllUsersResponse(jsonString: String) {
-                    val collectionType = object : TypeToken<List<User>>() {}.type
-                    val users: List<User> = gson.fromJson(jsonString, collectionType)
+                    val users: List<User> = Json.decodeFromString(jsonString)
                     mutableUsers.value = users
                 }
 
@@ -84,9 +83,7 @@ class PostsViewModel(application: Application) : AndroidViewModel(application) {
             .addToRequestQueue(Requests.Photos.fetchPhotos(object :
                 Requests.Photos.FetchAllPhotosListener {
                 override fun onFetchAllPhotosResponse(jsonString: String) {
-                    val collectionType = object : TypeToken<List<Photo>>() {}.type
-                    val photos: List<Photo> = gson.fromJson(jsonString, collectionType)
-
+                    val photos: List<Photo> = Json.decodeFromString(jsonString)
                     createPhotosMap(photos)
                 }
 

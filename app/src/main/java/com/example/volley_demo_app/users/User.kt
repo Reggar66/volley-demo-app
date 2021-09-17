@@ -1,5 +1,8 @@
 package com.example.volley_demo_app.users
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class User(
     val id: Int,
     val name: String,
@@ -10,6 +13,7 @@ data class User(
     val website: String,
     val company: Company
 ) {
+    @Serializable
     data class Address(
         val street: String,
         val suite: String,
@@ -18,11 +22,13 @@ data class User(
         val geo: Geo
     )
 
+    @Serializable
     data class Geo(
         val lat: Float,
         val lng: Float
     )
 
+    @Serializable
     data class Company(
         val name: String,
         val catchPhrase: String,
