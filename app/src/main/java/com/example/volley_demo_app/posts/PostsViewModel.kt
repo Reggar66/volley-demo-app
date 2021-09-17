@@ -15,9 +15,6 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 class PostsViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val gson = Gson()
-
     private val mutablePosts: MutableLiveData<List<Post>> by lazy {
         MutableLiveData<List<Post>>()
     }
